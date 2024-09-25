@@ -4,7 +4,7 @@
       <a-layout-header class="header">
         <a-space>
           <img src="../assets/a196.svg" class="logo" />
-          <div>Sion AI 问卷调查平台</div>
+          <div>Sion AITest Platforms</div>
         </a-space>
       </a-layout-header>
       <a-layout-content class="content">
