@@ -1,55 +1,103 @@
 <template>
-  <a-button @click="handleClick" status="warning">AI辅助生成</a-button>
+  <a-button type="outline" @click="handleClick">AI 生成题目</a-button>
   <a-modal
     v-model:visible="visible"
-    title="欢迎使用👏AI生成题目"
+    title="AI 生成题目"
     @cancel="handleCancel"
     @before-ok="handleBeforeOk"
   >
-    <a-form :model="form" @submit="handleBeforeOk">
+    <a-form
+      :model="form"
+      label-align="left"
+      auto-label-width
+      @submit="handleSubmit"
+    >
+      <a-form-item label="应用 id">
+        {{ appId }}
+      </a-form-item>
       <a-form-item field="questionNumber" label="题目数量">
-        <a-input v-model="form.questionNumber" />
+        <a-input-number
+          min="0"
+          max="20"
+          v-model="form.questionNumber"
+          placeholder="请输入题目数量"
+        />
       </a-form-item>
       <a-form-item field="optionNumber" label="选项数量">
-        <a-input v-model="form.optionNumber" />
+        <a-input-number
+          min="0"
+          max="6"
+          v-model="form.optionNumber"
+          placeholder="请输入选项数量"
+        />
+      </a-form-item>
+      <a-form-item>
+        <a-space>
+          <a-button
+            :loading="submitting"
+            type="primary"
+            html-type="submit"
+            style="width: 120px"
+          >
+            {{ submitting ? "生成中" : "一键生成" }}
+          </a-button>
+          <a-button
+            :loading="sseSubmitting"
+            style="width: 120px"
+            @click="handleSSESubmit"
+          >
+            {{ sseSubmitting ? "生成中" : "实时生成" }}
+          </a-button>
+        </a-space>
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
 
 <script setup lang="ts">
-import { withDefaults, reactive, ref, defineProps } from "vue";
+import { defineProps, reactive, ref, withDefaults } from "vue";
 import API from "@/api";
-import { useRouter } from "vue-router";
 import { aiGenerateQuestionUsingPost } from "@/api/questionController";
 import message from "@arco-design/web-vue/es/message";
 
 interface Props {
   appId: string;
   onSuccess?: (result: API.QuestionContentDTO[]) => void;
+  onSSESuccess?: (result: API.QuestionContentDTO) => void;
+  onSSEStart?: (event: any) => void;
+  onSSEClose?: (event: any) => void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  id: () => {
+  appId: () => {
     return "";
   },
 });
 
-const router = useRouter();
+const form = reactive({
+  optionNumber: 2,
+  questionNumber: 10,
+} as API.AiGenerateQuestionRequest);
 
 const visible = ref(false);
-const form = reactive({
-  optionNum: 3,
-  questionNum: 10,
-} as API.AiGenerateQuestionRequest);
+const submitting = ref(false);
+const sseSubmitting = ref(false);
 
 const handleClick = () => {
   visible.value = true;
 };
-const handleBeforeOk = async () => {
+const handleCancel = () => {
+  visible.value = false;
+};
+
+/**
+ * 提交
+ */
+const handleSubmit = async () => {
   if (!props.appId) {
     return;
   }
+  submitting.value = true;
   const res = await aiGenerateQuestionUsingPost({
     appId: props.appId as any,
     ...form,
@@ -58,13 +106,47 @@ const handleBeforeOk = async () => {
     if (props.onSuccess) {
       props.onSuccess(res.data.data);
     } else {
-      message.success("生成成功");
+      message.success("生成题目成功");
     }
+    handleCancel();
   } else {
-    message.error("生成失败" + res.data.message);
+    message.error("操作失败，" + res.data.message);
   }
+  submitting.value = false;
 };
-const handleCancel = () => {
-  visible.value = false;
+
+/**
+ * 提交（实时生成）
+ */
+const handleSSESubmit = async () => {
+  if (!props.appId) {
+    return;
+  }
+  sseSubmitting.value = true;
+  const eventSource = new EventSource(
+    `http://localhost:8101/api/question/ai_generate/sse?appId=${props.appId}&optionNumber=${form.optionNumber}&questionNumber=${form.questionNumber}`
+  );
+  let first = true;
+  eventSource.onmessage = function (event) {
+    if (first) {
+      props.onSSEStart?.(event);
+      handleCancel();
+      first = false;
+    }
+    props.onSSESuccess?.(JSON.parse(event.data));
+  };
+  eventSource.onerror = function (event) {
+    if (event.eventPhase === EventSource.CLOSED) {
+      props.onSSEClose?.(event);
+      eventSource.close();
+    } else {
+      eventSource.close();
+    }
+  };
+  sseSubmitting.value = false;
 };
 </script>
+
+<style scoped>
+/* 这里可以添加你需要的样式 */
+</style>

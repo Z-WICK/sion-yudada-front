@@ -38,6 +38,7 @@
             type="primary"
             v-if="current === questionContent.length"
             circle
+            :loading="submitting"
             :disabled="!currentAnswer"
             @click="doSubmit"
           >
@@ -127,7 +128,8 @@ const questionOptions = computed(() => {
 });
 const currentAnswer = ref<string>();
 const answerList = reactive<string[]>([]);
-const remainingTime = ref("30:00"); // Assuming static value for demo; you can add countdown logic here
+const remainingTime = ref("30:00"); // 假设静态值；可以添加倒计时逻辑
+const submitting = ref(false); // 添加提交状态
 
 const loadData = async () => {
   if (!props.appId) return;
@@ -179,10 +181,14 @@ const prevQuestion = () => {
 
 const doSubmit = async () => {
   if (!props.appId || !answerList) return;
+
+  submitting.value = true; // 开始加载
   const res = await addUserAnswerUsingPost({
     appId: props.appId as any,
     choices: answerList,
   });
+  submitting.value = false; // 结束加载
+
   if (res.data.code === 0 && res.data.data) {
     router.push(`/answer/result/${res.data.data}`);
   } else {
@@ -229,8 +235,11 @@ a-divider {
 }
 
 .adaptive-text {
-  color: white; : difference; /* 或者使用 exclusion
-  mix-blend-mode: difference; /* 在浅色背景上会显示为白色，在深色背景上会显示为黑色 */
+  color: white;
+
+  :difference ;
+  /* 或者使用 exclusion
+   mix-blend-mode: difference; /* 在浅色背景上会显示为白色，在深色背景上会显示为黑色 */
 }
 
 a-button {

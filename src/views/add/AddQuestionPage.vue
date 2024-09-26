@@ -32,6 +32,9 @@
                 <QuestionGeneralByAiModal
                   :appId="appId"
                   :onSuccess="onAiGenerateSuccess"
+                  :onSSESuccess="onAiGenerateSuccessSSE"
+                  :onSSEClose="onSSEClose"
+                  :onSSEStart="onSSEStart"
                 />
 
                 <a-button
@@ -251,6 +254,29 @@ const handleSubmit = async () => {
 //AI 生成完题目之后展现
 const onAiGenerateSuccess = (result: API.QuestionContentDTO[]) => {
   questionContent.value = [...questionContent.value, ...result];
+};
+
+/*
+ * AI 生成题目成功后执行SSE
+ * */
+const onAiGenerateSuccessSSE = (result: API.QuestionContentDTO) => {
+  questionContent.value = [...questionContent.value, result];
+};
+
+/**
+ * SSE 开始生成
+ * @param event
+ */
+const onSSEStart = (event: any) => {
+  message.success("开始生成");
+};
+
+/**
+ * SSE 生成完毕
+ * @param event
+ */
+const onSSEClose = (event: any) => {
+  message.success("生成完毕");
 };
 </script>
 

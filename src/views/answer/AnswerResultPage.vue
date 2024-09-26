@@ -26,31 +26,56 @@
               :style="{ marginBottom: '16px', borderRadius: '8px', backgroundColor: '#f9fafc' }"
           >
             <h3 :style="{ marginBottom: '16px', fontWeight: 'bold' }">
-              <a-icon type="profile" /> 结果信息
+              <a-icon type="profile"/>
+              结果信息
             </h3>
-            <p><a-icon type="info-circle" /> 结果描述：{{ data.resultDesc }}</p>
-            <p><a-icon type="number" /> 结果 id：{{ data.resultId }}</p>
-            <p><a-icon type="star" /> 结果得分：{{ data.resultScore }}</p>
-            <p><a-icon type="solution" /> 我的答案：{{ data.choices }}</p>
+            <p>
+              <a-icon type="info-circle"/>
+              结果描述：{{ data.resultDesc }}
+            </p>
+            <p>
+              <a-icon type="number"/>
+              结果 id：{{ data.resultId }}
+            </p>
+            <p>
+              <a-icon type="star"/>
+              结果得分：{{ data.resultScore }}
+            </p>
+            <p>
+              <a-icon type="solution"/>
+              我的答案：{{ data.choices }}
+            </p>
           </a-card>
 
           <a-card
               :style="{ marginBottom: '16px', borderRadius: '8px', backgroundColor: '#f9fafc' }"
           >
             <h3 :style="{ marginBottom: '16px', fontWeight: 'bold' }">
-              <a-icon type="appstore" /> 应用信息
+              <a-icon type="appstore"/>
+              应用信息
             </h3>
-            <p><a-icon type="project" /> 应用 id：{{ data.appId }}</p>
-            <p><a-icon type="bars" /> 应用类型：{{ APP_TYPE_MAP[data.appType] }}</p>
-            <p><a-icon type="filter" /> 评分策略：{{ APP_SCORING_STRATEGY_MAP[data.scoringStrategy] }}</p>
+            <p>
+              <a-icon type="project"/>
+              应用 id：{{ data.appId }}
+            </p>
+            <p>
+              <a-icon type="bars"/>
+              应用类型：{{ APP_TYPE_MAP[data.appType] }}
+            </p>
+            <p>
+              <a-icon type="filter"/>
+              评分策略：{{ APP_SCORING_STRATEGY_MAP[data.scoringStrategy] }}
+            </p>
           </a-card>
 
           <a-card :style="{ borderRadius: '8px', backgroundColor: '#f9fafc' }">
             <h3 :style="{ marginBottom: '16px', fontWeight: 'bold' }">
-              <a-icon type="user" /> 答题人信息
+              <a-icon type="user"/>
+              答题人信息
             </h3>
             <p>
-              <a-icon type="user" /> 答题人：
+              <a-icon type="user"/>
+              答题人：
               <div :style="{ display: 'flex', alignItems: 'center' }">
                 <a-avatar
                     :size="24"
@@ -61,7 +86,8 @@
               </div>
             </p>
             <p>
-              <a-icon type="clock-circle" /> 答题时间：
+              <a-icon type="clock-circle"/>
+              答题时间：
               {{ dayjs(data.createTime).format("YYYY-MM-DD HH:mm:ss") }}
             </p>
           </a-card>
@@ -94,13 +120,13 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, watchEffect, withDefaults } from "vue";
+import {defineProps, ref, watchEffect, withDefaults} from "vue";
 import API from "@/api";
-import { getUserAnswerVoByIdUsingGet } from "@/api/userAnswerController";
+import {getUserAnswerVoByIdUsingGet} from "@/api/userAnswerController";
 import message from "@arco-design/web-vue/es/message";
-import { useRouter } from "vue-router";
-import { dayjs } from "@arco-design/web-vue/es/_utils/date";
-import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "../../constant/app";
+import {useRouter} from "vue-router";
+import {dayjs} from "@arco-design/web-vue/es/_utils/date";
+import {APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP} from "../../constant/app";
 
 interface Props {
   id: string;
