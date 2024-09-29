@@ -24,12 +24,12 @@
       <a-form-item
         field="appName"
         label="应用名称"
-        help="请输入应用名称，不超过10个字"
+        help="请输入应用名称，不可为空"
         :validate-status="status"
         feedback
         :rules="[
           { required: true, message: '请输入应用名称' },
-          { max: 10, message: '应用名称不能超过10个字' },
+          { max: 100, message: '应用名称不能超过100个字' },
         ]"
       >
         <a-input
