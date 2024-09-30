@@ -1,19 +1,26 @@
 <template>
   <div
-      id="answerResultPage"
-      :style="{ background: 'linear-gradient(to bottom right, #f0f4f8, #d9e4ec)', padding: '20px' }"
+    id="answerResultPage"
+    :style="{
+      background: 'linear-gradient(to bottom right, #f0f4f8, #d9e4ec)',
+      padding: '20px',
+    }"
   >
     <a-card
-        :style="{ borderRadius: '12px', boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', marginBottom: '24px' }"
+      :style="{
+        borderRadius: '12px',
+        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+        marginBottom: '24px',
+      }"
     >
       <!-- 标题区块 -->
       <h2
-          :style="{
+        :style="{
           borderBottom: '2px solid #f0f0f0',
           paddingBottom: '8px',
           marginBottom: '24px',
           fontSize: '24px',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
         }"
       >
         {{ data.resultName }}
@@ -21,89 +28,105 @@
 
       <a-row>
         <!-- 左侧内容区 -->
-        <a-col flex="auto" class="content-wrapper" :style="{ paddingRight: '24px' }">
+        <a-col
+          flex="auto"
+          class="content-wrapper"
+          :style="{ paddingRight: '24px' }"
+        >
           <a-card
-              :style="{ marginBottom: '16px', borderRadius: '8px', backgroundColor: '#f9fafc' }"
+            :style="{
+              marginBottom: '16px',
+              borderRadius: '8px',
+              backgroundColor: '#f9fafc',
+            }"
           >
             <h3 :style="{ marginBottom: '16px', fontWeight: 'bold' }">
-              <a-icon type="profile"/>
+              <a-icon type="profile" />
               结果信息
             </h3>
             <p>
-              <a-icon type="info-circle"/>
+              <a-icon type="info-circle" />
               结果描述：{{ data.resultDesc }}
             </p>
             <p>
-              <a-icon type="number"/>
+              <a-icon type="number" />
               结果 id：{{ data.resultId }}
             </p>
             <p>
-              <a-icon type="star"/>
+              <a-icon type="star" />
               结果得分：{{ data.resultScore }}
             </p>
             <p>
-              <a-icon type="solution"/>
+              <a-icon type="solution" />
               我的答案：{{ data.choices }}
             </p>
           </a-card>
 
           <a-card
-              :style="{ marginBottom: '16px', borderRadius: '8px', backgroundColor: '#f9fafc' }"
+            :style="{
+              marginBottom: '16px',
+              borderRadius: '8px',
+              backgroundColor: '#f9fafc',
+            }"
           >
             <h3 :style="{ marginBottom: '16px', fontWeight: 'bold' }">
-              <a-icon type="appstore"/>
+              <a-icon type="appstore" />
               应用信息
             </h3>
             <p>
-              <a-icon type="project"/>
+              <a-icon type="project" />
               应用 id：{{ data.appId }}
             </p>
             <p>
-              <a-icon type="bars"/>
+              <a-icon type="bars" />
               应用类型：{{ APP_TYPE_MAP[data.appType] }}
             </p>
             <p>
-              <a-icon type="filter"/>
+              <a-icon type="filter" />
               评分策略：{{ APP_SCORING_STRATEGY_MAP[data.scoringStrategy] }}
             </p>
           </a-card>
 
           <a-card :style="{ borderRadius: '8px', backgroundColor: '#f9fafc' }">
             <h3 :style="{ marginBottom: '16px', fontWeight: 'bold' }">
-              <a-icon type="user"/>
+              <a-icon type="user" />
               答题人信息
             </h3>
-            <p>
-              <a-icon type="user"/>
-              答题人：
-              <div :style="{ display: 'flex', alignItems: 'center' }">
-                <a-avatar
-                    :size="24"
-                    :image-url="data.user?.userAvatar"
-                    :style="{ marginRight: '8px' }"
-                />
-                <a-typography-text>{{ data.user?.userName ?? "无名" }}</a-typography-text>
-              </div>
-            </p>
-            <p>
-              <a-icon type="clock-circle"/>
-              答题时间：
-              {{ dayjs(data.createTime).format("YYYY-MM-DD HH:mm:ss") }}
-            </p>
+
+            <a-icon type="user" />
+            答题人:
+            <div :style="{ display: 'flex', alignItems: 'center' }">
+              <a-avatar
+                :size="24"
+                :image-url="data.user?.userAvatar"
+                :style="{ marginRight: '8px' }"
+              />
+              <a-typography-text>{{
+                data.user?.userName ?? "匿名用户"
+              }}</a-typography-text>
+            </div>
+
+            <a-icon type="clock-circle" />
+            答题时间：
+            {{ dayjs(data.createTime).format("YYYY-MM-DD HH:mm:ss") }}
           </a-card>
         </a-col>
 
         <!-- 右侧图片区 -->
         <a-col flex="320px">
           <a-card
-              :style="{ borderRadius: '12px', overflow: 'hidden', marginBottom: '16px' }"
+            :style="{
+              borderRadius: '12px',
+              overflow: 'hidden',
+              marginBottom: '16px',
+            }"
           >
             <a-image
-                width="100%"
-                :src="data.resultPicture"
-                :style="{ borderRadius: '12px', transition: 'transform 0.3s' }"
-                @mouseenter="$event.target.style.transform = 'scale(1.05)'"
-                @mouseleave="$event.target.style.transform = 'scale(1)'"
+              width="100%"
+              :src="data.resultPicture"
+              :style="{ borderRadius: '12px', transition: 'transform 0.3s' }"
+              @mouseenter="$event.target.style.transform = 'scale(1.05)'"
+              @mouseleave="$event.target.style.transform = 'scale(1)'"
             />
           </a-card>
         </a-col>
@@ -112,7 +135,9 @@
       <!-- 底部按钮区 -->
       <a-row justify="end">
         <a-space size="medium">
-          <a-button type="primary" :href="`/answer/do/${data.appId}`">去答题</a-button>
+          <a-button type="primary" :href="`/answer/do/${data.appId}`"
+            >去答题</a-button
+          >
         </a-space>
       </a-row>
     </a-card>
@@ -120,13 +145,13 @@
 </template>
 
 <script setup lang="ts">
-import {defineProps, ref, watchEffect, withDefaults} from "vue";
+import { defineProps, ref, watchEffect, withDefaults } from "vue";
 import API from "@/api";
-import {getUserAnswerVoByIdUsingGet} from "@/api/userAnswerController";
+import { getUserAnswerVoByIdUsingGet } from "@/api/userAnswerController";
 import message from "@arco-design/web-vue/es/message";
-import {useRouter} from "vue-router";
-import {dayjs} from "@arco-design/web-vue/es/_utils/date";
-import {APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP} from "../../constant/app";
+import { useRouter } from "vue-router";
+import { dayjs } from "@arco-design/web-vue/es/_utils/date";
+import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "../../constant/app";
 
 interface Props {
   id: string;
