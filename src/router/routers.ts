@@ -19,6 +19,7 @@ import AnswerResultPage from "@/views/answer/AnswerResultPage.vue";
 import MyAnswerPage from "@/views/answer/MyAnswerPage.vue";
 import Success from "@/views/result/Success.vue";
 import Error from "@/views/result/Error.vue";
+import AppStatisticPage from "@/views/statistics/AppStatisticPage.vue";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -180,6 +181,15 @@ export const routes: Array<RouteRecordRaw> = [
     props: true,
     meta: {
       hideInMenu: true,
+    },
+  },
+
+  {
+    path: "/app_statistic",
+    name: "应用统计",
+    component: AppStatisticPage,
+    meta: {
+      access: ACCESS_ENUM.ADMIN,
     },
   },
 
