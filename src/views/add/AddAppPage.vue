@@ -153,7 +153,7 @@ import {
   addAppUsingPost,
   editAppUsingPost,
   getAppVoByIdUsingGet,
-} from "@/api/appController";
+} from "../../api/appController";
 import message from "@arco-design/web-vue/es/message";
 
 const router = useRouter();

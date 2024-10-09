@@ -31,9 +31,9 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
-import AppCard from "@/components/AppCard.vue";
-import API from "@/api";
-import { listAppVoByPageUsingPost } from "@/api/appController";
+import AppCard from "../components/AppCard.vue";
+import API from "../api";
+import { listAppVoByPageUsingPost } from "../api/appController";
 import message from "@arco-design/web-vue/es/message";
 import { REVIEW_STATUS_ENUM } from "@/constant/app";
 import ShareModal from "@/components/ShareModal.vue";
