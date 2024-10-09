@@ -1,6 +1,9 @@
 import axios from "axios";
 import { Message } from "@arco-design/web-vue";
 
+// 是否是开发环境
+export const isDev = process.env.NODE_ENV === "development";
+
 const myAxios = axios.create({
   baseURL: isDev ? "http://localhost:8101" : "http://120.79.203.113:8101",
   timeout: 60000,
