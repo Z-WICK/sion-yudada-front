@@ -99,11 +99,6 @@ import {
   generateUserAnswerIdUsingGet,
 } from "@/api/userAnswerController";
 import ProgressDisplay from "./components/ProgressDisplay.vue";
-import {
-  IconNext,
-  IconSubmit,
-  IconPrevious,
-} from "@arco-design/web-vue/es/icon";
 
 interface Props {
   appId: string;
@@ -258,10 +253,6 @@ a-divider {
 
 .adaptive-text {
   color: white;
-
-  :difference ;
-  /* 或者使用 exclusion
-   mix-blend-mode: difference; /* 在浅色背景上会显示为白色，在深色背景上会显示为黑色 */
 }
 
 a-button {
