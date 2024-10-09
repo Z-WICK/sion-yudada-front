@@ -32,6 +32,7 @@
       </template>
     </a-modal>
   </a-list-item>
+  <share-modal :link="shareLink" title="应用分享" ref="shareModalRef" />
 </template>
 
 <script setup lang="ts">
@@ -41,6 +42,7 @@ import message from "@arco-design/web-vue/es/message";
 import AppDetailPage from "@/views/app/AppDetailPage.vue"; // 引入组件
 import { useRouter } from "vue-router"; // 使用路由
 import API from "@/api";
+import ShareModal from "@/components/ShareModal.vue";
 
 interface Props {
   app: API.AppVO;
@@ -52,6 +54,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 // 控制对话框显示
 const isModalVisible = ref(false);
+// 引入分享对话框组件
+const shareModalRef = ref();
+
+//分享链接
+const shareLink = `${window.location.protocol}//${window.location.host}/app/detail/${props.app.id}`;
 
 // 点击卡片显示对话框
 const doCardClick = () => {
@@ -61,7 +68,9 @@ const doCardClick = () => {
 // 分享按钮点击事件
 const onShareClick = (event: Event) => {
   event?.stopPropagation(); // 阻止事件冒泡
-  message.info("分享功能正在开发中");
+  if (shareModalRef.value) {
+    shareModalRef.value.openModal();
+  }
 };
 
 // 点击开始答题按钮跳转
