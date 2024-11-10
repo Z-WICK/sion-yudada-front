@@ -39,10 +39,10 @@
 import { IconShareInternal } from "@arco-design/web-vue/es/icon";
 import { defineProps, withDefaults, ref } from "vue";
 import message from "@arco-design/web-vue/es/message";
-import AppDetailPage from "@/views/app/AppDetailPage.vue"; // 引入组件
+import AppDetailPage from "../views/app/AppDetailPage.vue"; // 引入组件
 import { useRouter } from "vue-router"; // 使用路由
-import API from "@/api";
-import ShareModal from "@/components/ShareModal.vue";
+import API from "../api";
+import ShareModal from "../components/ShareModal.vue";
 
 interface Props {
   app: API.AppVO;
