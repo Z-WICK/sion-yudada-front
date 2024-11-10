@@ -53,7 +53,6 @@ const form = reactive({
   userPassword: "",
 } as API.UserLoginRequest);
 const handleSubmit = async () => {
-  console.log(form);
   const res = await userLoginUsingPost(form);
   if (res.data.code === 0) {
     await loginUserStore.fetchLoginUser();
