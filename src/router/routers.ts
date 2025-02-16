@@ -99,7 +99,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin/user",
-    name: "用户管理",
+    name: "管理用户",
     component: AdminUserPage,
     meta: {
       access: ACCESS_ENUM.ADMIN,
@@ -107,7 +107,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin/app",
-    name: "应用管理",
+    name: "管理应用",
     component: AdminAppPage,
     meta: {
       access: ACCESS_ENUM.ADMIN,
@@ -115,7 +115,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin/question",
-    name: "题目管理",
+    name: "管理题目",
     component: AdminQuestionPage,
     meta: {
       access: ACCESS_ENUM.ADMIN,
@@ -123,7 +123,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin/scoring_result",
-    name: "评分管理",
+    name: "管理评分",
     component: AdminScoringResultPage,
     meta: {
       access: ACCESS_ENUM.ADMIN,
@@ -131,7 +131,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/admin/user_answer",
-    name: "回答管理",
+    name: "管理回答",
     component: AdminUserAnswerPage,
     meta: {
       access: ACCESS_ENUM.ADMIN,
