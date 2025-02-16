@@ -42,7 +42,6 @@ import ShareModal from "@/components/ShareModal.vue";
 const initSearchParams = {
   current: 1,
   pageSize: 12,
-  keyword: "",
 };
 
 const searchParams = ref<API.AppQueryRequest>({
@@ -78,7 +77,7 @@ const onPageChange = (page: number) => {
 const onSearch = async (value: string) => {
   searchParams.value = {
     ...searchParams.value,
-    keyword: value,
+    searchText: value,
     current: 1,
   };
   await loadData();
