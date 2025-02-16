@@ -106,11 +106,7 @@
         </template>
         <template #optional="{ record }">
           <a-space>
-            <a-button
-              status="danger"
-              @click="doDelete(record)"
-
-            >
+            <a-button status="danger" @click="doDelete(record)">
               删除
             </a-button>
           </a-space>
@@ -137,6 +133,8 @@ const formSearchParams = ref<API.UserAnswerQueryRequest>({});
 const initSearchParams = {
   current: 1,
   pageSize: 10,
+  sortField: "createTime",
+  sortOrder: "desc",
 };
 
 const searchParams = ref<API.UserAnswerQueryRequest>({
