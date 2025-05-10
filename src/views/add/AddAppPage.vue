@@ -24,19 +24,21 @@
       <a-form-item
         field="appName"
         label="应用名称"
-        help="请输入应用名称，不可为空"
-        :validate-status="status"
-        feedback
+        :validate-status="nameStatus"
+        :feedback="nameFeedback"
         :rules="[
           { required: true, message: '请输入应用名称' },
           { max: 100, message: '应用名称不能超过100个字' },
         ]"
       >
+        <template #help>
+          <span v-if="nameStatus !== 'error'">请输入应用名称，不可为空</span>
+        </template>
         <a-input
           v-model="form.appName"
           placeholder="请输入应用名称"
-          @input="handleValidating"
-          @blur="handleValidation('appName')"
+          @input="() => handleValidation('appName')"
+          @blur="() => handleValidation('appName')"
         />
       </a-form-item>
 
@@ -44,19 +46,23 @@
       <a-form-item
         field="appDesc"
         label="应用描述"
-        help="请输入应用描述，不超过25个字"
-        :validate-status="status"
-        feedback
+        :validate-status="descStatus"
+        :feedback="descFeedback"
         :rules="[
           { required: true, message: '请输入应用描述' },
           { max: 25, message: '应用描述不能超过25个字' },
         ]"
       >
+        <template #help>
+          <span v-if="descStatus !== 'error'"
+            >请输入应用描述，不超过25个字</span
+          >
+        </template>
         <a-input
           v-model="form.appDesc"
           placeholder="请输入应用描述"
-          @input="handleValidating"
-          @blur="handleValidation('appDesc')"
+          @input="() => handleValidation('appDesc')"
+          @blur="() => handleValidation('appDesc')"
         />
       </a-form-item>
 
@@ -64,7 +70,7 @@
       <a-form-item
         field="appIcon"
         label="应用图标"
-        help="请输入应用图标URL，格式为：https://s2.loli.net/2024/09/17/ezrd7qsOD5ijT1l.jpg"
+        help="请输入应用图标URL，格式为：https://s2.loli.net/2025/04/07/5wPbMFBusDjqOTG.jpg"
       >
         <a-input v-model="form.appIcon" placeholder="请输入应用图标URL" />
       </a-form-item>
@@ -148,6 +154,7 @@
 <script setup lang="ts">
 import { ref, reactive, watchEffect } from "vue";
 import { useRouter } from "vue-router";
+import type { FieldRule } from "@arco-design/web-vue/es/form/interface";
 import { APP_SCORING_STRATEGY_MAP, APP_TYPE_MAP } from "@/constant/app";
 import {
   addAppUsingPost,
@@ -156,8 +163,9 @@ import {
 } from "../../api/appController";
 import message from "@arco-design/web-vue/es/message";
 
+type ValidateStatus = "success" | "error" | "validating" | undefined;
+
 const router = useRouter();
-const status = ref("validating");
 const form = reactive({
   appName: "",
   appDesc: "",
@@ -166,12 +174,54 @@ const form = reactive({
   scoringStrategy: 0,
 });
 
+// 校验状态管理
+const nameStatus = ref<ValidateStatus>();
+const nameFeedback = ref("");
+const descStatus = ref<ValidateStatus>();
+const descFeedback = ref("");
+
 const props = defineProps<{ id?: string }>();
 const oldApp = ref(null);
 
-/**
- * 加载数据
- */
+// 校验逻辑
+const validateField = (value: string, rules: FieldRule[]) => {
+  for (const rule of rules) {
+    if (rule.required && !value.trim()) {
+      return { status: "error", message: rule.message };
+    }
+    if (rule.max && value.length > rule.max) {
+      return { status: "error", message: rule.message };
+    }
+  }
+  return { status: "success", message: "" };
+};
+
+const handleValidation = (field: "appName" | "appDesc") => {
+  let rules: FieldRule[];
+  let value: string;
+
+  if (field === "appName") {
+    rules = [
+      { required: true, message: "请输入应用名称" },
+      { max: 100, message: "应用名称不能超过100个字" },
+    ];
+    value = form.appName;
+    const result = validateField(value, rules);
+    nameStatus.value = result.status;
+    nameFeedback.value = result.message;
+  } else {
+    rules = [
+      { required: true, message: "请输入应用描述" },
+      { max: 25, message: "应用描述不能超过25个字" },
+    ];
+    value = form.appDesc;
+    const result = validateField(value, rules);
+    descStatus.value = result.status;
+    descFeedback.value = result.message;
+  }
+};
+
+// 其他原有逻辑保持完全一致
 const loadData = async () => {
   if (props.id) {
     const res = await getAppVoByIdUsingGet({ id: props.id });
@@ -188,10 +238,15 @@ watchEffect(() => {
   loadData();
 });
 
-/**
- * 提交
- */
 const handleSubmit = async () => {
+  // 提交前强制校验
+  handleValidation("appName");
+  handleValidation("appDesc");
+
+  if (nameStatus.value === "error" || descStatus.value === "error") {
+    return message.error("请先修正表单错误");
+  }
+
   let res;
   if (props.id) {
     res = await editAppUsingPost({ id: props.id, ...form });
@@ -206,18 +261,6 @@ const handleSubmit = async () => {
     }, 3000);
   } else {
     message.error("操作失败，" + res.data.message);
-  }
-};
-
-const handleValidating = () => {
-  status.value = "validating";
-};
-
-const handleValidation = (field) => {
-  if (form[field]) {
-    status.value = "success";
-  } else {
-    status.value = "error";
   }
 };
 </script>
